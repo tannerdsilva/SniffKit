@@ -1,0 +1,5 @@
+module syslibpcap [system] {
+	header "/usr/include/pcap/pcap.h"
+	link "pcap"
+	export *
+}
