@@ -16,10 +16,12 @@ let package = Package(
         .executableTarget(
             name: "SniffKit",
             dependencies: [
-            	"syslibpcap",
-            	.product(name:"Logging", package:"swift-log")
+				"syslibpcap",
+            	.product(name:"Logging", package:"swift-log"),
+            	"sysinet"
         	]
         ),
+        .target(name:"sysinet"),
         .systemLibrary(name:"syslibpcap", pkgConfig:"libpcap", providers:[.apt(["libpcap-dev"])]),
         .testTarget(
             name: "SniffKitTests",
