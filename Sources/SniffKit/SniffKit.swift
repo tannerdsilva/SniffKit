@@ -11,10 +11,11 @@ fileprivate func makeDefaultLogger() -> Logger {
 	return newLogger
 }
 
-public struct InterfaceSniffer {
+public class InterfaceSniffer {
 	
 	enum Error:Swift.Error {
 		case pcapOpenError
+		case pcapSetupFilterError
 	}
 	
 	public var logger:Logger
@@ -33,6 +34,17 @@ public struct InterfaceSniffer {
 		}
 		self.handle = capHandle
 		self.errorBuffer = errorBuff
+		var makeFilter = bpf_program()
+		guard pcap_compile(capHandle, &makeFilter, "udp", 1, PCAP_NETMASK_UNKNOWN) == 0 && pcap_setfilter(capHandle, &makeFilter) == 0 else {
+			logger.error("unable to enable pcap filter.")
+			throw Error.pcapSetupFilterError
+		}
+		
+	}
+	
+	
+	deinit {
+		pcap_close(self.handle)
 	}
 }
 
